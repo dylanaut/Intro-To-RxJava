@@ -8,7 +8,6 @@ import io.reactivex.observables.ConnectableObservable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.TestScheduler;
 import org.junit.Test;
-import org.reactivestreams.Subscription;
 
 public class ReplayExample {
 
@@ -101,16 +100,13 @@ public class ReplayExample {
     @Test
     public void testReplayWithBufferSize() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = TestObserver.create();
-
         ConnectableObservable<Long> source = Observable.interval(1000, TimeUnit.MILLISECONDS, scheduler)
                                                        .take(5)
                                                        .replay(2, scheduler);
 
         source.connect();
         scheduler.advanceTimeBy(4500, TimeUnit.MILLISECONDS);
-        source
-.test();
+        final TestObserver<Long> tester = source.test();
         scheduler.triggerActions();
         tester.assertValues(2L, 3L);
         scheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS);
@@ -121,16 +117,13 @@ public class ReplayExample {
     @Test
     public void testReplayWithTime() throws InterruptedException {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = TestObserver.create();
-
         ConnectableObservable<Long> source = Observable.interval(1000, TimeUnit.MILLISECONDS, scheduler)
                                                        .take(5)
                                                        .replay(2000, TimeUnit.MILLISECONDS, scheduler);
 
         source.connect();
         scheduler.advanceTimeBy(4500, TimeUnit.MILLISECONDS);
-        source
-.test();
+        final TestObserver<Long> tester = source.test();
         tester.assertValues(2L, 3L);
         scheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS);
         tester.assertValues(2L, 3L, 4L);

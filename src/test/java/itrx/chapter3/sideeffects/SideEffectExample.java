@@ -71,8 +71,6 @@ public class SideEffectExample {
 
     @Test
     public void testBadIndex() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<String> values = Observable.just("No", "side", "effects", "please");
 
         Inc index = new Inc();
@@ -82,8 +80,7 @@ public class SideEffectExample {
                     return w;
                 })
                       .map(w -> index.getCount());
-        indexed
-.test();
+        final TestObserver<Integer> tester = indexed.test();
 
         tester.assertValues(4);
         tester.assertComplete();

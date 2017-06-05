@@ -32,10 +32,8 @@ public class FilterExample {
 
     @Test
     public void test() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.range(0, 10);
-        values.filter(v -> v % 2 == 0).test();
+        final TestObserver<Integer> tester = values.filter(v -> v % 2 == 0).test();
 
         tester.assertValues(8);
         tester.assertComplete();

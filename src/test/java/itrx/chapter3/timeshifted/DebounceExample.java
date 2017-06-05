@@ -69,15 +69,13 @@ public class DebounceExample {
     @Test
     public void testDebounce() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
+        final TestObserver<Integer> tester = Observable.concat(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
         )
-                  .scan(0, (acc, v) -> acc + 1)
-                  .debounce(150, TimeUnit.MILLISECONDS, scheduler).test();
+                                                     .scan(0, (acc, v) -> acc + 1)
+                                                     .debounce(150, TimeUnit.MILLISECONDS, scheduler).test();
 
         scheduler.advanceTimeBy(2100, TimeUnit.MILLISECONDS);
         tester.assertValues(9);
@@ -87,15 +85,14 @@ public class DebounceExample {
     @Test
     public void testDebounceDynamic() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
+        final TestObserver<Integer> tester = Observable.concat(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
         )
-                  .scan(0, (acc, v) -> acc + 1)
-                  .debounce(i -> Observable.timer(i * 50, TimeUnit.MILLISECONDS, scheduler)).test();
+                                                     .scan(0, (acc, v) -> acc + 1)
+                                                     .debounce(i -> Observable.timer(
+                                                             i * 50, TimeUnit.MILLISECONDS, scheduler)).test();
 
         scheduler.advanceTimeBy(2100, TimeUnit.MILLISECONDS);
         tester.assertValues(1, 2, 3, 4, 5, 9);
@@ -105,15 +102,13 @@ public class DebounceExample {
     @Test
     public void testThrottleWithTimeout() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
+        final TestObserver<Integer> tester = Observable.concat(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
         )
-                  .scan(0, (acc, v) -> acc + 1)
-                  .throttleWithTimeout(150, TimeUnit.MILLISECONDS, scheduler).test();
+                                                     .scan(0, (acc, v) -> acc + 1)
+                                                     .throttleWithTimeout(150, TimeUnit.MILLISECONDS, scheduler).test();
 
         scheduler.advanceTimeBy(2100, TimeUnit.MILLISECONDS);
         tester.assertValues(3, 4, 5, 9);

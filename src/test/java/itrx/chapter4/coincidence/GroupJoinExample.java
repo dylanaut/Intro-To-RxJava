@@ -45,7 +45,6 @@ public class GroupJoinExample {
 
     @Test
     public void test() {
-        TestObserver<Object> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> left = interval(100, TimeUnit.MILLISECONDS, scheduler)
@@ -53,11 +52,12 @@ public class GroupJoinExample {
         Observable<Long> right = interval(200, TimeUnit.MILLISECONDS, scheduler)
                 .take(3);
 
-        left.groupJoin(right,
+        final TestObserver<Object> tester = left.groupJoin(right,
                 i -> Observable.never(),
                 i -> Observable.timer(0, TimeUnit.MILLISECONDS, scheduler),
                 (l, rs) -> rs.toList().map(rl -> Tuple.create(l, rl)))
-            .flatMap((Function<Single<Tuple<Long, List<Long>>>, ObservableSource<?>>) Single::toObservable).test();
+                                                .flatMap((Function<Single<Tuple<Long, List<Long>>>, ObservableSource<?>>) Single::toObservable)
+                                                .test();
 
         scheduler.advanceTimeTo(600, TimeUnit.MILLISECONDS);
         tester.assertValues(Arrays.asList(

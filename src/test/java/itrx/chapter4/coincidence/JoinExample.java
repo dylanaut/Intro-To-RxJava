@@ -72,7 +72,6 @@ public class JoinExample {
 
     @Test
     public void testJoinSimple() {
-        TestObserver<Tuple<Long, Long>> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> left =
@@ -80,13 +79,13 @@ public class JoinExample {
         Observable<Long> right =
                 Observable.interval(200, TimeUnit.MILLISECONDS, scheduler);
 
-        left.join(
-                right,
-                i -> Observable.never(),
-                i -> Observable.timer(0, TimeUnit.MILLISECONDS, scheduler),
-                (l, r) -> Tuple.create(l, r)
-        )
-            .take(10).test();
+        final TestObserver<Tuple<Long, Long>> tester =
+                left.join(right,
+                        i -> Observable.never(),
+                        i -> Observable.timer(0, TimeUnit.MILLISECONDS, scheduler),
+                        Tuple::create
+                )
+                    .take(10).test();
 
         scheduler.advanceTimeTo(1000, TimeUnit.MILLISECONDS);
         tester.assertValueSequence(Arrays.asList(
@@ -111,21 +110,16 @@ public class JoinExample {
 
     @Test
     public void testJoin2Way() {
-        TestObserver<Tuple<Long, Long>> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
-
         Observable<Long> left =
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
         Observable<Long> right =
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        left.join(
-                right,
+        final TestObserver<Tuple<Long, Long>> tester = left.join(right,
                 i -> Observable.timer(150, TimeUnit.MILLISECONDS, scheduler),
                 i -> Observable.timer(0, TimeUnit.MILLISECONDS, scheduler),
-                (l, r) -> Tuple.create(l, r)
-        )
-            .take(10).test();
+                Tuple::create).take(10).test();
 
         scheduler.advanceTimeTo(1000, TimeUnit.MILLISECONDS);
         tester.assertValueSequence(Arrays.asList(

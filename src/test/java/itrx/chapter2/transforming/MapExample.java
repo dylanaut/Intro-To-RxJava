@@ -38,11 +38,9 @@ public class MapExample {
 
     @Test
     public void testMap() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 4);
 
-        values.map(i -> i + 3).test();
+        final TestObserver<Integer> tester = values.map(i -> i + 3).test();
 
         tester.assertValues(6);
         tester.assertComplete();
@@ -57,13 +55,11 @@ public class MapExample {
 
     @Test
     public void testMap2() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values =
                 Observable.just("0", "1", "2", "3")
                           .map(Integer::parseInt);
 
-        values.test();
+        final TestObserver<Integer> tester = values.test();
 
         tester.assertValues(3);
         tester.assertComplete();

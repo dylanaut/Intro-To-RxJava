@@ -63,10 +63,9 @@ public class UnsubscribingExample {
 
     @Test
     public void testUnsubscribe() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
         Subject<Integer> values = ReplaySubject.create();
 
-        values.test();
+        final TestObserver<Integer> tester = values.test();
         values.onNext(0);
         values.onNext(1);
         values.onNext(2);
@@ -77,12 +76,14 @@ public class UnsubscribingExample {
 
     @Test
     public void testIndependentSubscriptions() {
-        TestObserver<Integer> tester1 = new TestObserver<Integer>();
-        TestObserver<Integer> tester2 = new TestObserver<Integer>();
+        TestObserver<Integer> tester1 = TestObserver.create();
+        TestObserver<Integer> tester2 = TestObserver.create();
 
         Subject<Integer> values = ReplaySubject.create();
+
         values.subscribe(tester1);
         values.subscribe(tester2);
+
         values.onNext(0);
         values.onNext(1);
         values.onNext(2);

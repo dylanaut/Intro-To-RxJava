@@ -6,9 +6,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.TestObserver;
 import org.junit.Assert;
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
-
-import static org.junit.Assert.assertFalse;
 
 public class SerializeExample {
 
@@ -48,6 +45,7 @@ public class SerializeExample {
                   public void onSubscribe(Disposable disposable) {
                       System.out.println("Completed");
                   }
+
 
                   @Override
                   public void onComplete() {
@@ -89,30 +87,30 @@ public class SerializeExample {
 
 
         source.doOnDispose(() -> System.out.println("Unsubscribed"))
-               .subscribe(new Observer<Integer>() {
-                   @Override
-                   public void onSubscribe(Disposable disposable) {
-                       System.out.println("Subscribed");
-                   }
+              .subscribe(new Observer<Integer>() {
+                  @Override
+                  public void onSubscribe(Disposable disposable) {
+                      System.out.println("Subscribed");
+                  }
 
 
-                   @Override
-                   public void onComplete() {
-                       System.out.println("Completed");
-                   }
+                  @Override
+                  public void onComplete() {
+                      System.out.println("Completed");
+                  }
 
 
-                   @Override
-                   public void onError(Throwable e) {
-                       System.out.println(e);
-                   }
+                  @Override
+                  public void onError(Throwable e) {
+                      System.out.println(e);
+                  }
 
 
-                   @Override
-                   public void onNext(Integer t) {
-                       System.out.println(t);
-                   }
-               });
+                  @Override
+                  public void onNext(Integer t) {
+                      System.out.println(t);
+                  }
+              });
 
 //		1
 //		2
@@ -127,8 +125,6 @@ public class SerializeExample {
 
     @Test
     public void testSafeSubscribe() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> source = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
@@ -137,8 +133,7 @@ public class SerializeExample {
             o.onComplete();
         });
 
-        source
-.test();
+        final TestObserver<Integer> tester = source.test();
 
         tester.assertValues(2);
         tester.assertComplete();
@@ -149,8 +144,6 @@ public class SerializeExample {
 
     @Test
     public void testUnsafeSubscribe() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> source = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
@@ -159,7 +152,8 @@ public class SerializeExample {
             o.onComplete();
         });
 
-        source.doOnDispose(() -> System.out.println("Unsubscribed")).test();
+        final TestObserver<Integer> tester =
+                source.doOnDispose(() -> System.out.println("Unsubscribed")).test();
 
         tester.assertValues(3);
         Assert.assertEquals(2, tester.getEvents().size());
@@ -170,8 +164,6 @@ public class SerializeExample {
 
     @Test
     public void testSerialize() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> source = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
@@ -184,7 +176,8 @@ public class SerializeExample {
         ;
 
 
-        source.doOnDispose(() -> System.out.println("Unsubscribed")).test();
+        final TestObserver<Integer> tester =
+                source.doOnDispose(() -> System.out.println("Unsubscribed")).test();
 
         tester.assertValues(2);
         tester.assertComplete();

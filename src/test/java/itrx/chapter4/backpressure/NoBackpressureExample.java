@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.exceptions.MissingBackpressureException;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.schedulers.TestScheduler;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NoBackpressureExample {
 
@@ -105,7 +105,7 @@ public class NoBackpressureExample {
                   .observeOn(scheduler).test();
 
         scheduler.advanceTimeBy(10, TimeUnit.MILLISECONDS);
-        assertThat(tester.errors().get(0),
-                instanceOf(io.reactivex.exceptions.MissingBackpressureException.class));
+        assertThat(tester.errors().get(0))
+                .isInstanceOf(MissingBackpressureException.class);
     }
 }

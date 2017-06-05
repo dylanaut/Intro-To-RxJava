@@ -44,9 +44,7 @@ public class CombineLatestExample {
     @Test
     public void test() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<String> tester = TestObserver.create();
-
-        Observable.combineLatest(
+        final TestObserver<String> tester = Observable.combineLatest(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler),
                 Observable.interval(150, TimeUnit.MILLISECONDS, scheduler),
                 (i1, i2) -> i1 + " - " + i2

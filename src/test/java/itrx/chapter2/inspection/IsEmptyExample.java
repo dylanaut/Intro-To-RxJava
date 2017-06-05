@@ -32,12 +32,11 @@ public class IsEmptyExample {
 
     @Test
     public void testIsEmpty() {
-        TestObserver<Boolean> tester = new TestObserver<Boolean>();
         TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> values = Observable.timer(1000, TimeUnit.MILLISECONDS, scheduler);
 
-        values.isEmpty().test();
+        final TestObserver<Boolean> tester = values.isEmpty().test();
 
         scheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS);
 

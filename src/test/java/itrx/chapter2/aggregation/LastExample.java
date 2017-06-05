@@ -57,11 +57,9 @@ public class LastExample {
 
     @Test
     public void testLast() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 10);
 
-        values.lastElement().test();
+        final TestObserver<Integer> tester = values.lastElement().test();
 
         tester.assertValues(9);
         tester.assertComplete();
@@ -71,11 +69,9 @@ public class LastExample {
 
     @Test
     public void testLastWithPredicate() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 10);
 
-        values.filter(v -> v < 5).lastElement().test();
+        final TestObserver<Integer> tester = values.filter(v -> v < 5).lastElement().test();
 
         tester.assertValues(4);
         tester.assertComplete();
@@ -85,11 +81,9 @@ public class LastExample {
 
     @Test
     public void testLastOrDefault() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.empty();
 
-        values.last(-1).test();
+        final TestObserver<Integer> tester = values.last(-1).test();
 
         tester.assertValues(1);
         tester.assertComplete();
@@ -99,11 +93,9 @@ public class LastExample {
 
     @Test
     public void testLastOrDefaultWithPredicate() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.empty();
 
-        values.filter(v -> v < 5).last(-1).test();
+        final TestObserver<Integer> tester = values.filter(v -> v < 5).last(-1).test();
 
         tester.assertValues(1);
         tester.assertComplete();

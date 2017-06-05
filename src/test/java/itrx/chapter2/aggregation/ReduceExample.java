@@ -63,11 +63,9 @@ public class ReduceExample {
 
     @Test
     public void testWithAccumulator() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<String> values = Observable.just("Rx", "is", "easy");
 
-        values.reduce(0, (acc, next) -> acc + 1).test();
+        final TestObserver<Integer> tester = values.reduce(0, (acc, next) -> acc + 1).test();
 
         tester.assertValues(3);
         tester.assertComplete();

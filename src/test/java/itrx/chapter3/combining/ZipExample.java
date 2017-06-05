@@ -116,9 +116,7 @@ public class ZipExample {
     @Test
     public void test() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<String> tester = TestObserver.create();
-
-        Observable.zip(
+        final TestObserver<String> tester = Observable.zip(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler),
                 Observable.interval(150, TimeUnit.MILLISECONDS, scheduler),
                 (i1, i2) -> i1 + " - " + i2
@@ -134,10 +132,9 @@ public class ZipExample {
 
     @Test
     public void testZipMultiple() {
-        TestObserver<String> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.zip(
+        final TestObserver<String> tester = Observable.zip(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler),
                 Observable.interval(150, TimeUnit.MILLISECONDS, scheduler),
                 Observable.interval(050, TimeUnit.MILLISECONDS, scheduler),
@@ -153,16 +150,14 @@ public class ZipExample {
 
     @Test
     public void testZipUneven() {
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.zip(
+        final TestObserver<Long> tester = Observable.zip(
                 Observable.range(0, 5),
                 Observable.range(0, 3),
                 Observable.range(0, 8),
                 (i1, i2, i3) -> i1 + " - " + i2 + " - " + i3)
-                  .count().test();
+                                                    .count().test();
 
-        tester.assertValues(3);
+        tester.assertValue(3L);
 
         tester.dispose();
     }
@@ -170,13 +165,12 @@ public class ZipExample {
 
     @Test
     public void testZipWith() {
-        TestObserver<String> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
-                  .zipWith(
-                          Observable.interval(150, TimeUnit.MILLISECONDS, scheduler),
-                          (i1, i2) -> i1 + " - " + i2).test();
+        final TestObserver<String> tester =
+                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
+                          .zipWith(Observable.interval(150, TimeUnit.MILLISECONDS, scheduler),
+                                  (i1, i2) -> i1 + " - " + i2).test();
 
         scheduler.advanceTimeBy(600, TimeUnit.MILLISECONDS);
         tester.assertValues();
@@ -188,12 +182,11 @@ public class ZipExample {
 
     @Test
     public void testZipWithIterable() {
-        TestObserver<String> tester = TestObserver.create();
-
-        Observable.range(0, 5)
-                  .zipWith(
-                          Arrays.asList(0, 2, 4, 6, 8),
-                          (i1, i2) -> i1 + " - " + i2).test();
+        final TestObserver<String> tester =
+                Observable.range(0, 5)
+                          .zipWith(
+                                  Arrays.asList(0, 2, 4, 6, 8),
+                                  (i1, i2) -> i1 + " - " + i2).test();
 
         tester.assertValues();
         tester.assertComplete();

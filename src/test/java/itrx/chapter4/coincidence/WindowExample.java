@@ -87,9 +87,7 @@ public class WindowExample {
 
     @Test
     public void testParallel() {
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.merge(
+        final TestObserver<Integer> tester = Observable.merge(
                 Observable.range(0, 5)
                           .window(3, 1)).test();
 

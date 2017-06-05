@@ -74,9 +74,7 @@ public class MergeDelayErrorExample {
 
 
     @Test
-    public void test1Error() {
-        TestObserver<Long> tester = TestObserver.create();
-        TestScheduler scheduler = new TestScheduler();
+    public void test1Error() {        TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> failAt200 =
                 Observable.concat(
@@ -86,7 +84,7 @@ public class MergeDelayErrorExample {
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
                           .take(4);
 
-        Observable.mergeDelayError(failAt200, completeAt400).test();
+        final TestObserver<Long> tester = Observable.mergeDelayError(failAt200, completeAt400).test();
 
         scheduler.advanceTimeBy(400, TimeUnit.MILLISECONDS);
         tester.assertValues(0L, 0L, 1L, 1L, 2L, 3L);
@@ -95,9 +93,7 @@ public class MergeDelayErrorExample {
 
 
     @Test
-    public void test2Errors() {
-        TestObserver<Long> tester = TestObserver.create();
-        TestScheduler scheduler = new TestScheduler();
+    public void test2Errors() {        TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> failAt200 =
                 Observable.concat(
@@ -111,7 +107,7 @@ public class MergeDelayErrorExample {
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
                           .take(4);
 
-        Observable.mergeDelayError(failAt200, failAt300, completeAt400).test();
+        final TestObserver<Long> tester = Observable.mergeDelayError(failAt200, failAt300, completeAt400).test();
 
         scheduler.advanceTimeBy(400, TimeUnit.MILLISECONDS);
         tester.assertValues(0L, 0L, 0L, 1L, 1L, 1L, 2L, 2L, 3L);

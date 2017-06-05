@@ -50,14 +50,11 @@ public class BehaviorSubjectExample {
 
     @Test
     public void testLate() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         BehaviorSubject<Integer> s = BehaviorSubject.create();
         s.onNext(0);
         s.onNext(1);
         s.onNext(2);
-        s
-                .test();
+        final TestObserver<Integer> tester = s.test();
         s.onNext(3);
 
         tester.assertValues(2, 3);
@@ -66,15 +63,13 @@ public class BehaviorSubjectExample {
 
     @Test
     public void testCompleted() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         BehaviorSubject<Integer> s = BehaviorSubject.create();
         s.onNext(0);
         s.onNext(1);
         s.onNext(2);
         s.onComplete();
-        s
-                .test();
+
+        final TestObserver<Integer> tester = s.test();
 
         tester.assertValues();
         tester.assertComplete();
@@ -84,11 +79,8 @@ public class BehaviorSubjectExample {
 
     @Test
     public void testInitialvalue() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         BehaviorSubject<Integer> s = BehaviorSubject.create();
-        s
-                .test();
+        final TestObserver<Integer> tester = s.test();
         s.onNext(1);
 
         tester.assertValues(0, 1);

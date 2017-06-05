@@ -111,8 +111,6 @@ public class DistinctExample {
 
     @Test
     public void testDistinct() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(1);
             o.onNext(1);
@@ -122,7 +120,7 @@ public class DistinctExample {
             o.onComplete();
         });
 
-        values.distinct().test();
+        final TestObserver<Integer> tester = values.distinct().test();
 
         tester.assertValues(3);
         tester.assertComplete();
@@ -132,8 +130,6 @@ public class DistinctExample {
 
     @Test
     public void testDistinctKey() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.create(o -> {
             o.onNext("First");
             o.onNext("Second");
@@ -143,7 +139,7 @@ public class DistinctExample {
             o.onComplete();
         });
 
-        values.distinct(v -> v.charAt(0)).test();
+        final TestObserver<String> tester = values.distinct(v -> v.charAt(0)).test();
 
         tester.assertValues("First", "Second", "Third");
         tester.assertComplete();
@@ -153,8 +149,6 @@ public class DistinctExample {
 
     @Test
     public void testDistinctUntilChanged() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(1);
             o.onNext(1);
@@ -164,7 +158,7 @@ public class DistinctExample {
             o.onComplete();
         });
 
-        values.distinctUntilChanged().test();
+        final TestObserver<Integer> tester = values.distinctUntilChanged().test();
 
         tester.assertValues(1, 2, 3, 2);
         tester.assertComplete();
@@ -174,8 +168,6 @@ public class DistinctExample {
 
     @Test
     public void testDistinctUntilChangedKey() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.create(o -> {
             o.onNext("First");
             o.onNext("Second");
@@ -185,7 +177,7 @@ public class DistinctExample {
             o.onComplete();
         });
 
-        values.distinctUntilChanged(v -> v.charAt(0)).test();
+        final TestObserver<String> tester = values.distinctUntilChanged(v -> v.charAt(0)).test();
 
         tester.assertValues("First", "Second", "Third", "Fourth");
         tester.assertComplete();

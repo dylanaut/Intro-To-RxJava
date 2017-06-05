@@ -43,11 +43,8 @@ public class RxContractExample {
 
     @Test
     public void test() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Subject<Integer> s = ReplaySubject.create();
-        s
-.test();
+        final TestObserver<Integer> tester = s.test();
         s.onNext(0);
         s.onComplete();
         s.onNext(1);
@@ -61,10 +58,8 @@ public class RxContractExample {
 
     @Test
     public void testPrintCompletion() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Subject<Integer> values = ReplaySubject.create();
-        values.test();
+        final TestObserver<Integer> tester = values.test();
         values.onNext(0);
         values.onNext(1);
         values.onComplete();

@@ -88,8 +88,6 @@ public class FromExample {
 
     @Test
     public void testFromFuture() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         FutureTask<Integer> f = new FutureTask<>(() -> {
             return 21;
         });
@@ -97,7 +95,7 @@ public class FromExample {
 
         Observable<Integer> values = Observable.fromFuture(f);
 
-        values.test();
+        final TestObserver<Integer> tester = values.test();
 
         tester.assertValues(21);
         tester.assertNoErrors();
@@ -107,11 +105,9 @@ public class FromExample {
 
     @Test
     public void testFromArray() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Integer[] input = {1, 2, 3};
         Observable<Integer> values = Observable.fromArray(input);
-        values.test();
+        final TestObserver<Integer> tester = values.test();
 
         tester.assertValues(input);
         tester.assertNoErrors();
@@ -121,11 +117,9 @@ public class FromExample {
 
     @Test
     public void testFromIterable() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Iterable<Integer> input = Arrays.asList(1, 2, 3);
         Observable<Integer> values = Observable.fromIterable(input);
-        values.test();
+        final TestObserver<Integer> tester = values.test();
 
         tester.assertValueSequence(input);
         tester.assertNoErrors();

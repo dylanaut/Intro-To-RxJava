@@ -99,11 +99,8 @@ public class AsObservableExample {
 
     @Test
     public void testPush() {
-        TestObserver<String> tester = TestObserver.create();
-
         BrakeableService2 service = new BrakeableService2();
-        service.getValuesUnsafe()
-               .test();
+        final TestObserver<String> tester = service.getValuesUnsafe().test();
         service.getValuesUnsafe().onNext("GARBAGE");
         service.play();
 

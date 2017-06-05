@@ -4,8 +4,6 @@ import io.reactivex.observers.TestObserver;
 import io.reactivex.subjects.AsyncSubject;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-
 public class AsyncSubjectExample {
 
     public void exampleLastValue() {
@@ -35,10 +33,10 @@ public class AsyncSubjectExample {
 
     @Test
     public void testLastValue() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         AsyncSubject<Integer> s = AsyncSubject.create();
-        s.test();
+
+        final TestObserver<Integer> tester = s.test();
+
         s.onNext(0);
         s.onNext(1);
         s.onNext(2);
@@ -52,16 +50,15 @@ public class AsyncSubjectExample {
 
     @Test
     public void testNoCompletion() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         AsyncSubject<Integer> s = AsyncSubject.create();
-        s.test();
+        final TestObserver<Integer> tester = s.test();
+
         s.onNext(0);
         s.onNext(1);
         s.onNext(2);
 
-        tester.assertValues();
-        assertTrue(tester.getEvents().size() == 0);
+        tester.assertNotComplete();
+        tester.assertNoValues();
         tester.assertNoErrors();
     }
 }

@@ -37,15 +37,14 @@ public class ConcatMapExample {
 
     @Test
     public void testConcatMap() {
-        TestObserver<Integer> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.just(100, 150)
-                  .concatMap(i ->
-                          Observable.interval(i, TimeUnit.MILLISECONDS, scheduler)
-                                    .map(v -> i)
-                                    .take(3)
-                  ).test();
+        final TestObserver<Integer> tester = Observable.just(100, 150)
+                                                       .concatMap(i ->
+                                                               Observable.interval(i, TimeUnit.MILLISECONDS, scheduler)
+                                                                         .map(v -> i)
+                                                                         .take(3)
+                                                       ).test();
 
         scheduler.advanceTimeBy(750, TimeUnit.MILLISECONDS);
         tester.assertValues(0);

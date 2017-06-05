@@ -95,15 +95,13 @@ public class ResumeExample {
 
     @Test
     public void testOnErrorReturn() {
-        TestObserver<String> tester = TestObserver.create();
-
         Observable<String> values = Observable.create(o -> {
             o.onNext("Rx");
             o.onNext("is");
             o.onError(new Exception("adjective unknown"));
         });
 
-        values.onErrorReturn(e -> "Error: " + e.getMessage()).test();
+        final TestObserver<String> tester = values.onErrorReturn(e -> "Error: " + e.getMessage()).test();
 
         tester.assertValues(
                 "Rx",
@@ -121,15 +119,13 @@ public class ResumeExample {
 
     @Test
     public void testerOnErrorResumeNext() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
             o.onError(new Exception("Oops"));
         });
 
-        values.onErrorResumeNext(Observable.just(Integer.MAX_VALUE)).test();
+        final TestObserver<Integer> tester = values.onErrorResumeNext(Observable.just(Integer.MAX_VALUE)).test();
 
         tester.assertValues(1, 2, Integer.MAX_VALUE);
         tester.assertComplete();
@@ -139,15 +135,14 @@ public class ResumeExample {
 
     @Test
     public void testOnErrorResumeNextRethrow() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
             o.onError(new Exception("Oops"));
         });
 
-        values.onErrorResumeNext((Throwable e) -> Observable.error(new UnsupportedOperationException(e))).test();
+        final TestObserver<Integer> tester = values.onErrorResumeNext((Throwable e) -> Observable.error(new UnsupportedOperationException(e)))
+                                                 .test();
 
         tester.assertValues(1, 2);
         tester.assertComplete();
@@ -158,18 +153,16 @@ public class ResumeExample {
 
     @Test
     public void testOnExceptionResumeNext() {
-        TestObserver<String> tester = TestObserver.create();
-
         Observable<String> values = Observable.create(o -> {
             o.onNext("Rx");
             o.onNext("is");
             o.onError(new Exception()); // this will be caught
         });
 
-        values.onExceptionResumeNext(Observable.just("hard")).test();
+        final TestObserver<String> tester = values.onExceptionResumeNext(Observable.just("hard")).test();
 
         tester.assertValues("Rx", "is", "hard");
-                tester.assertComplete();
+        tester.assertComplete();
         tester.assertNoErrors();
     }
 
@@ -177,8 +170,6 @@ public class ResumeExample {
     @SuppressWarnings("serial")
     @Test
     public void testOnExceptionResumeNextNoException() {
-        TestObserver<String> tester = TestObserver.create();
-
         Observable<String> values = Observable.create(o -> {
             o.onNext("Rx");
             o.onNext("is");
@@ -186,7 +177,7 @@ public class ResumeExample {
             }); // this won't be caught
         });
 
-        values.onExceptionResumeNext(Observable.just("hard")).test();
+        final TestObserver<String> tester = values.onExceptionResumeNext(Observable.just("hard")).test();
 
         tester.assertComplete();
         Assert.assertEquals(tester.errorCount(), 1);

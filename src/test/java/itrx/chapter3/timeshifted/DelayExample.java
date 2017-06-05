@@ -62,13 +62,12 @@ public class DelayExample {
     @Test
     public void testDelay() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = TestObserver.create();
-
-        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
-                  .delay(i -> Observable.timer(i * 100, TimeUnit.MILLISECONDS, scheduler))
-                  .timeInterval(scheduler)
-                  .map(i -> i.time(TimeUnit.MILLISECONDS))
-                  .take(5).test();
+        final TestObserver<Long> tester = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
+                                                  .delay(i -> Observable.timer(
+                                                          i * 100, TimeUnit.MILLISECONDS, scheduler))
+                                                  .timeInterval(scheduler)
+                                                  .map(i -> i.time(TimeUnit.MILLISECONDS))
+                                                  .take(5).test();
 
         scheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS);
         tester.assertValues(100L, 200L, 200L, 200L, 200L);

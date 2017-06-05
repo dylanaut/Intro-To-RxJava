@@ -53,9 +53,9 @@ public class MulticastExample {
     @Test
     public void testRefcount() throws InterruptedException {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester1 = new TestObserver<Long>();
-        TestObserver<Long> tester2 = new TestObserver<Long>();
-        TestObserver<Long> tester3 = new TestObserver<Long>();
+        TestObserver<Long> tester1 = TestObserver.create();
+        TestObserver<Long> tester2 = TestObserver.create();
+        TestObserver<Long> tester3 = TestObserver.create();
 
         Observable<Long> cold =
                 Observable.interval(200, TimeUnit.MILLISECONDS, scheduler)

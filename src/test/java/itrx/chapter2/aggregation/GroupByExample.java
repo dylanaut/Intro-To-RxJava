@@ -1,7 +1,6 @@
 package itrx.chapter2.aggregation;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ public class GroupByExample {
 
         values.groupBy(word -> word.charAt(0))
               .flatMap(group -> {
-                  return group.lastElement().toObservable().map(v -> group.getKey() + ": " + v);
+                          return group.lastElement().toObservable().map(v -> group.getKey() + ": " + v);
                       }
               )
               .subscribe(System.out::println);
@@ -37,8 +36,6 @@ public class GroupByExample {
 
     @Test
     public void testGroupBy() {
-        TestObserver<Object> tester = TestObserver.create();
-
         Observable<String> values = Observable.just(
                 "first",
                 "second",
@@ -50,10 +47,13 @@ public class GroupByExample {
 
         /* v ->  */
 
-        values.groupBy(word -> word.charAt(0))
-              .flatMap(group ->
-                      group.lastElement().toObservable().map(v -> group.getKey() + ": " + v)
-              ).test();
+        final TestObserver<String> tester =
+                values.groupBy(word -> word.charAt(0))
+                      .flatMap(group ->
+                              group.lastElement()
+                                   .toObservable()
+                                   .map(v -> group.getKey() + ": " + v)
+                      ).test();
 
         tester.assertValues("s: sixth", "t: third", "f: fifth");
         tester.assertComplete();

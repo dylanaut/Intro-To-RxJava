@@ -47,9 +47,7 @@ public class UsingExample {
 
 
     @Test
-    public void testUsing() {
-        TestObserver<Character> tester = TestObserver.create();
-        String[] leaseRelease = {"", ""};
+    public void testUsing() {        String[] leaseRelease = {"", ""};
 
         Observable<Character> values = Observable.using(
                 () -> {
@@ -65,7 +63,7 @@ public class UsingExample {
                 }),
                 (resource) -> leaseRelease[1] = resource);
 
-        values.test();
+        final TestObserver<Character> tester = values.test();
 
         Assert.assertEquals(leaseRelease[0], leaseRelease[1]);
         tester.assertValues('M', 'y', 'R', 'e', 's', 'o', 'u', 'r', 'c', 'e');

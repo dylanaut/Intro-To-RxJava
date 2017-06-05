@@ -67,10 +67,8 @@ public class FlatMapIterableExample {
 
     @Test
     public void testFlatMapIterable() {
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.range(1, 3)
-                  .flatMapIterable(i -> range(1, i)).test();
+        final TestObserver<Integer> tester = Observable.range(1, 3)
+                                                     .flatMapIterable(i -> range(1, i)).test();
 
         tester.assertValues(3);
         tester.assertComplete();
@@ -85,12 +83,10 @@ public class FlatMapIterableExample {
 
     @Test
     public void testFlatMapIterableWithSelector() {
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.range(1, 3)
-                  .flatMapIterable(
-                          i -> range(1, i),
-                          (ori, rv) -> ori * rv).test();
+        final TestObserver<Integer> tester = Observable.range(1, 3)
+                                                     .flatMapIterable(
+                                                             i -> range(1, i),
+                                                             (ori, rv) -> ori * rv).test();
 
         tester.assertValues(9);
         tester.assertComplete();
@@ -100,12 +96,10 @@ public class FlatMapIterableExample {
 
     @Test
     public void testFlatMapLazyIterable() {
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.range(1, 3)
-                  .flatMapIterable(
-                          i -> new Range(1, i),
-                          (ori, rv) -> ori * rv).test();
+        final TestObserver<Integer> tester = Observable.range(1, 3)
+                                                     .flatMapIterable(
+                                                             i -> new Range(1, i),
+                                                             (ori, rv) -> ori * rv).test();
 
         tester.assertValues(9);
         tester.assertComplete();

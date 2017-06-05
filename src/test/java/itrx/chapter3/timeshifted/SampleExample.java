@@ -29,11 +29,9 @@ public class SampleExample {
     @Test
     public void testSample() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = TestObserver.create();
-
-        Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
-                  .sample(1, TimeUnit.SECONDS, scheduler)
-                  .take(3).test();
+        final TestObserver<Long> tester = Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
+                                                  .sample(1, TimeUnit.SECONDS, scheduler)
+                                                  .take(3).test();
 
         scheduler.advanceTimeBy(3, TimeUnit.SECONDS);
         tester.assertValues(5L, 12L, 18L);

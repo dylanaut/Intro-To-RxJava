@@ -64,15 +64,12 @@ public class ReplaySubjectExample {
 
     @Test
     public void testEarlyLate() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         ReplaySubject<Integer> s = ReplaySubject.create();
-        s
-.test();
+        final TestObserver<Integer> tester = s.test();
+
         s.onNext(0);
         s.onNext(1);
-        s
-.test();
+
         s.onNext(2);
 
         tester.assertValues(0, 1, 0, 1, 2, 2);
@@ -81,14 +78,11 @@ public class ReplaySubjectExample {
 
     @Test
     public void testWithSize() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         ReplaySubject<Integer> s = ReplaySubject.createWithSize(2);
         s.onNext(0);
         s.onNext(1);
         s.onNext(2);
-        s
-.test();
+        final TestObserver<Integer> tester = s.test();
         s.onNext(3);
 
         tester.assertValues(1, 2, 3);
@@ -97,7 +91,6 @@ public class ReplaySubjectExample {
 
     @Test
     public void testWithTime() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
         TestScheduler scheduler = new TestScheduler();
 
         ReplaySubject<Integer> s = ReplaySubject.createWithTime(150, TimeUnit.MILLISECONDS, scheduler);
@@ -106,8 +99,7 @@ public class ReplaySubjectExample {
         s.onNext(1);
         scheduler.advanceTimeBy(100, TimeUnit.MILLISECONDS);
         s.onNext(2);
-        s
-.test();
+        final TestObserver<Integer> tester = s.test();
         s.onNext(3);
 
         tester.assertValues(1, 2, 3);

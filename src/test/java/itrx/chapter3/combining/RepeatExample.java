@@ -82,12 +82,10 @@ public class RepeatExample {
 
     @Test
     public void testRepeat() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> words = Observable.range(0, 2);
 
-        words.repeat()
-             .take(4).test();
+        final TestObserver<Integer> tester = words.repeat()
+                                                  .take(4).test();
 
         tester.assertValues(1);
         tester.assertComplete();
@@ -102,11 +100,9 @@ public class RepeatExample {
 
     @Test
     public void testRepeat2() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> words = Observable.range(0, 2);
 
-        words.repeat(2).test();
+        final TestObserver<Integer> tester = words.repeat(2).test();
 
         tester.assertValues(1);
         tester.assertComplete();
@@ -117,11 +113,9 @@ public class RepeatExample {
 
     @Test
     public void testRepeatWhen2() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 2);
 
-        values.repeatWhen(ob -> {
+        final TestObserver<Integer> tester = values.repeatWhen(ob -> {
             return ob.take(2);
         }).test();
 
@@ -133,16 +127,15 @@ public class RepeatExample {
 
     @Test
     public void testRepeatWithInterval() {
-        TestObserver<Long> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        values.take(5) // Numbers 0 to 4
-              .repeatWhen((ob) -> {
-                  ob.subscribe();
-                  return Observable.interval(2, TimeUnit.SECONDS, scheduler);
-              }).test(); // Repeat 0 to 4 every 2s, forever
+        final TestObserver<Long> tester =
+                values.take(5) // Numbers 0 to 4
+                      .repeatWhen((ob) -> {
+                          ob.subscribe();
+                          return Observable.interval(2, TimeUnit.SECONDS, scheduler);
+                      }).test();// Repeat 0 to 4 every 2s, forever
 
         scheduler.advanceTimeBy(4, TimeUnit.SECONDS);
 

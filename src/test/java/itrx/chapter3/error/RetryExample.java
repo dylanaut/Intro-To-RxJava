@@ -34,16 +34,14 @@ public class RetryExample {
 
 
     @Test
-    public void testRetry() {
-        TestObserver<Integer> tester = TestObserver.create();
-        Random random = new Random();
+    public void testRetry() {        Random random = new Random();
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(random.nextInt() % 20);
             o.onNext(random.nextInt() % 20);
             o.onError(new Exception());
         });
 
-        values.retry(1).test();
+        final TestObserver<Integer> tester = values.retry(1).test();
 
         Assert.assertEquals(tester.getEvents().size(), 4);
         tester.assertComplete();

@@ -4,6 +4,8 @@ import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class NestExample {
 
     public void example() {
@@ -23,13 +25,12 @@ public class NestExample {
 
     @Test
     public void test() {
-        TestObserver<Integer> tester = TestObserver.create();
+        final TestObserver<Observable<Integer>> tester
+                = Observable.range(0, 3)
+                            .map(Observable::just).test();
 
-        Observable.range(0, 3)
-                  .map(Observable::just)
-                  .subscribe(ob -> ob.test());
-
-        tester.assertValues(2);
+        tester.assertValueCount(3);
+        assertThat(tester.values().stream().allMatch(oi -> oi instanceof Observable)).isTrue();
         tester.assertComplete();
         tester.assertNoErrors();
     }

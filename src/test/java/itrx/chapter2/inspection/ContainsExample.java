@@ -28,12 +28,11 @@ public class ContainsExample {
 
     @Test
     public void test() {
-        TestObserver<Boolean> tester = new TestObserver<Boolean>();
         TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        values.contains(4L).test();
+        final TestObserver<Boolean> tester = values.contains(4L).test();
 
         scheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS);
 

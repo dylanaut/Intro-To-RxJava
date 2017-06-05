@@ -196,11 +196,9 @@ public class TakeSkipExample {
 
     @Test
     public void testTake() {
-        TestObserver<Integer> tester = new TestObserver<>();
-
         Observable<Integer> values = Observable.range(0, 5);
 
-        values.take(2).test();
+        final TestObserver<Integer> tester = values.take(2).test();
 
         tester.assertValues(0, 1);
         tester.assertComplete();
@@ -210,11 +208,9 @@ public class TakeSkipExample {
 
     @Test
     public void testSkip() {
-        TestObserver<Integer> tester = new TestObserver<>();
-
         Observable<Integer> values = Observable.range(0, 5);
 
-        values.skip(2).test();
+        final TestObserver<Integer> tester = values.skip(2).test();
 
         tester.assertValues(2, 3, 4);
         tester.assertComplete();
@@ -225,11 +221,9 @@ public class TakeSkipExample {
     @Test
     public void testTakeTime() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<>();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        values.take(250, TimeUnit.MILLISECONDS, scheduler).test();
+        final TestObserver<Long> tester = values.take(250, TimeUnit.MILLISECONDS, scheduler).test();
 
         scheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS);
         tester.dispose();
@@ -243,14 +237,12 @@ public class TakeSkipExample {
     @Test
     public void testSkipTime() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<>();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        final TestObserver<Long> test = values.skip(250, TimeUnit.MILLISECONDS, scheduler).test();
+        final TestObserver<Long> tester = values.skip(250, TimeUnit.MILLISECONDS, scheduler).test();
 
         scheduler.advanceTimeBy(550, TimeUnit.MILLISECONDS);
-        test.dispose();
+        tester.dispose();
 
         tester.assertValues(2L, 3L, 4L);
         tester.assertNoErrors();
@@ -260,14 +252,12 @@ public class TakeSkipExample {
     @Test
     public void testTakeWhile() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<>();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        Disposable disposable = values.takeWhile(v -> v < 2).test();
+        final TestObserver<Long> tester = values.takeWhile(v -> v < 2).test();
 
         scheduler.advanceTimeBy(550, TimeUnit.MILLISECONDS);
-        disposable.dispose();
+        tester.dispose();
 
         tester.assertValues(0L, 1L);
         tester.assertComplete();
@@ -278,14 +268,12 @@ public class TakeSkipExample {
     @Test
     public void testSkipWhile() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<>();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        Disposable disposable = values.skipWhile(v -> v < 2).test();
+        final TestObserver<Long> tester = values.skipWhile(v -> v < 2).test();
 
         scheduler.advanceTimeBy(550, TimeUnit.MILLISECONDS);
-        disposable.dispose();
+        tester.dispose();
 
         tester.assertValues(2L, 3L, 4L);
         tester.assertNoErrors();
@@ -294,11 +282,9 @@ public class TakeSkipExample {
 
     @Test
     public void testerSkipLast() {
-        TestObserver<Integer> tester = new TestObserver<>();
-
         Observable<Integer> values = Observable.range(0, 5);
 
-        values.skipLast(2).test();
+        final TestObserver<Integer> tester = values.skipLast(2).test();
 
         tester.assertValues(2);
         tester.assertComplete();
@@ -308,11 +294,9 @@ public class TakeSkipExample {
 
     @Test
     public void testTakeLast() {
-        TestObserver<Integer> tester = new TestObserver<>();
-
         Observable<Integer> values = Observable.range(0, 5);
 
-        values.takeLast(2).test();
+        final TestObserver<Integer> tester = values.takeLast(2).test();
 
         tester.assertValues(3, 4);
         tester.assertComplete();
@@ -323,15 +307,13 @@ public class TakeSkipExample {
     @Test
     public void testTakeUntil() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<>();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
         Observable<Long> cutoff = Observable.timer(250, TimeUnit.MILLISECONDS, scheduler);
 
-        Disposable disposable = values.takeUntil(cutoff).test();
+        final TestObserver<Long> tester = values.takeUntil(cutoff).test();
 
         scheduler.advanceTimeBy(550, TimeUnit.MILLISECONDS);
-        disposable.dispose();
+        tester.dispose();
 
         tester.assertValues(0L, 1L);
         tester.assertComplete();
@@ -342,15 +324,13 @@ public class TakeSkipExample {
     @Test
     public void testSkipUntil() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<>();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
         Observable<Long> cutoff = Observable.timer(250, TimeUnit.MILLISECONDS, scheduler);
 
-        Disposable disposable = values.skipUntil(cutoff).test();
+        final TestObserver<Long> tester = values.skipUntil(cutoff).test();
 
         scheduler.advanceTimeBy(550, TimeUnit.MILLISECONDS);
-        disposable.dispose();
+        tester.dispose();
 
         tester.assertValues(2L, 3L, 4L);
         tester.assertNoErrors();

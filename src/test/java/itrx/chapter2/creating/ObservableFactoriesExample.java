@@ -111,11 +111,8 @@ public class ObservableFactoriesExample {
 
     @Test
     public void testJust() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.just("one", "two", "three");
-        values
-                .test();
+        final TestObserver<String> tester = values.test();
 
         tester.assertValues("one", "two", "three");
         tester.assertNoErrors();
@@ -125,11 +122,8 @@ public class ObservableFactoriesExample {
 
     @Test
     public void testEmpty() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.empty();
-        values
-                .test();
+        final TestObserver<String> tester = values.test();
 
         tester.assertValues();
         tester.assertNoErrors();
@@ -139,11 +133,8 @@ public class ObservableFactoriesExample {
 
     @Test
     public void testNever() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.never();
-        values
-                .test();
+        final TestObserver<String> tester = values.test();
 
         tester.assertValues();
         tester.assertNoErrors();
@@ -153,11 +144,8 @@ public class ObservableFactoriesExample {
 
     @Test
     public void testError() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.error(new Exception("Oops"));
-        values
-                .test();
+        final TestObserver<String> tester = values.test();
 
         tester.assertValues();
         tester.assertComplete();
@@ -204,14 +192,12 @@ public class ObservableFactoriesExample {
 
     @Test
     public void testCreate() {
-        TestObserver<String> tester = new TestObserver<String>();
-
         Observable<String> values = Observable.create(o -> {
             o.onNext("Hello");
             o.onComplete();
         });
 
-        values.test();
+        final TestObserver<String> tester = values.test();
 
         tester.assertValues("Hello");
         tester.assertComplete();

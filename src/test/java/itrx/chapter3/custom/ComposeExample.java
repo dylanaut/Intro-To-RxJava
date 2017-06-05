@@ -33,10 +33,8 @@ public class ComposeExample {
 
     @Test
     public void testComposeFromClass() {
-        TestObserver<Double> tester = TestObserver.create();
-
-        Observable.just(2, 3, 10, 12, 4)
-                  .compose(new RunningAverage()).test();
+        final TestObserver<Double> tester = Observable.just(2, 3, 10, 12, 4)
+                                                    .compose(new RunningAverage()).test();
 
         tester.assertValues(2.0, 2.5, 5.0, 6.75, 6.2);
         tester.assertComplete();
@@ -51,10 +49,8 @@ public class ComposeExample {
 
     @Test
     public void testComposeParameterised() {
-        TestObserver<Double> tester = TestObserver.create();
-
-        Observable.just(2, 3, 10, 12, 4)
-                  .compose(new RunningAverage(5)).test();
+        final TestObserver<Double> tester = Observable.just(2, 3, 10, 12, 4)
+                                                    .compose(new RunningAverage(5)).test();
 
         tester.assertValues(2.0, 2.5, 3.0);
         tester.assertComplete();

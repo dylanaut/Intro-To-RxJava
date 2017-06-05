@@ -27,12 +27,9 @@ public class PublishSubjectExample {
 
     @Test
     public void test() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         PublishSubject<Integer> subject = PublishSubject.create();
         subject.onNext(1);
-        subject
-.test();
+        final TestObserver<Integer> tester = subject.test();
         subject.onNext(2);
         subject.onNext(3);
         subject.onNext(4);

@@ -27,11 +27,9 @@ public class StartWithExample {
 
     @Test
     public void test() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 3);
 
-        values.startWithArray(-1, -2).test();
+        final TestObserver<Integer> tester = values.startWithArray(-1, -2).test();
 
         tester.assertValues(2);
         tester.assertComplete();

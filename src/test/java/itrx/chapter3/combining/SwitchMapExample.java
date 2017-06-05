@@ -36,15 +36,15 @@ public class SwitchMapExample {
 
     @Test
     public void test() {
-        TestObserver<Object> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
-                  .switchMap(i ->
-                          Observable.interval(30, TimeUnit.MILLISECONDS, scheduler)
-                                    .map(l -> i))
-                  .take(9)
-                  .distinctUntilChanged().test();
+        final TestObserver<Long> tester =
+                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
+                          .switchMap(i ->
+                                  Observable.interval(30, TimeUnit.MILLISECONDS, scheduler)
+                                            .map(l -> i))
+                          .take(9)
+                          .distinctUntilChanged().test();
 
         scheduler.advanceTimeBy(400, TimeUnit.MILLISECONDS);
         tester.assertValues(0L, 1L, 2L);

@@ -102,15 +102,14 @@ public class TimeoutExample {
     @Test
     public void testTimeout() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
-                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
-                Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
-                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
-        )
-                  .scan(0, (acc, v) -> acc + 1)
-                  .timeout(200, TimeUnit.MILLISECONDS, scheduler).test();
+        final TestObserver<Integer> tester =
+                Observable.concat(
+                        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
+                        Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
+                        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
+                )
+                          .scan(0, (acc, v) -> acc + 1)
+                          .timeout(200, TimeUnit.MILLISECONDS, scheduler).test();
 
         scheduler.advanceTimeBy(2300, TimeUnit.MILLISECONDS);
         tester.assertValues(3);
@@ -125,14 +124,13 @@ public class TimeoutExample {
     @Test
     public void testTimeoutWithResume() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
+        final TestObserver<Integer> tester = Observable.concat(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3))
-                  .scan(0, (acc, v) -> acc + 1)
-                  .timeout(200, TimeUnit.MILLISECONDS, scheduler, Observable.just(-1)).test();
+                                                       .scan(0, (acc, v) -> acc + 1)
+                                                       .timeout(200, TimeUnit.MILLISECONDS, scheduler, Observable.just(-1))
+                                                       .test();
 
         scheduler.advanceTimeBy(2300, TimeUnit.MILLISECONDS);
         tester.assertValues(1);
@@ -142,15 +140,14 @@ public class TimeoutExample {
     @Test
     public void testTimeoutPerItem() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
+        final TestObserver<Integer> tester = Observable.concat(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
         )
-                  .scan(0, (acc, v) -> acc + 1)
-                  .timeout(i -> Observable.timer(200, TimeUnit.MILLISECONDS, scheduler)).test();
+                                                       .scan(0, (acc, v) -> acc + 1)
+                                                       .timeout(i -> Observable.timer(200, TimeUnit.MILLISECONDS, scheduler))
+                                                       .test();
 
         scheduler.advanceTimeBy(2300, TimeUnit.MILLISECONDS);
         tester.assertValues(3);
@@ -165,15 +162,15 @@ public class TimeoutExample {
     @Test
     public void testTimeoutPerItemWithResume() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Integer> tester = TestObserver.create();
-
-        Observable.concat(
-                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
-                Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
-                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
-        )
-                  .scan(0, (acc, v) -> acc + 1)
-                  .timeout(i -> Observable.timer(200, TimeUnit.MILLISECONDS, scheduler), Observable.just(-1)).test();
+        final TestObserver<Integer> tester =
+                Observable.concat(
+                        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3),
+                        Observable.interval(500, TimeUnit.MILLISECONDS, scheduler).take(3),
+                        Observable.interval(100, TimeUnit.MILLISECONDS, scheduler).take(3)
+                )
+                          .scan(0, (acc, v) -> acc + 1)
+                          .timeout(i -> Observable.timer(200, TimeUnit.MILLISECONDS, scheduler), Observable
+                                  .just(-1)).test();
 
         scheduler.advanceTimeBy(2300, TimeUnit.MILLISECONDS);
         tester.assertValues(1);

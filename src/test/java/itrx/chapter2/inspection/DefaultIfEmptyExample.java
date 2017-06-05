@@ -43,11 +43,9 @@ public class DefaultIfEmptyExample {
 
     @Test
     public void testDefaultIfEmpty() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.empty();
 
-        values.defaultIfEmpty(2).test();
+        final TestObserver<Integer> tester = values.defaultIfEmpty(2).test();
 
         tester.assertValues(2);
         tester.assertComplete();
@@ -57,11 +55,9 @@ public class DefaultIfEmptyExample {
 
     @Test
     public void testDefaultIfEmptyError() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.error(new Exception());
 
-        values.defaultIfEmpty(2).test();
+        final TestObserver<Integer> tester = values.defaultIfEmpty(2).test();
 
         tester.assertValues();
         tester.assertComplete();

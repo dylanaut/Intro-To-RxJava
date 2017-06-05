@@ -37,11 +37,9 @@ public class ExistsExample {
 
     @Test
     public void testFalse() {
-        TestObserver<Boolean> tester = new TestObserver<Boolean>();
-
         Observable<Integer> values = Observable.range(0, 2);
 
-        values.any(i -> i > 2).test();
+        final TestObserver<Boolean> tester = values.any(i -> i > 2).test();
 
         tester.assertValues(false);
         tester.assertComplete();
@@ -51,11 +49,9 @@ public class ExistsExample {
 
     @Test
     public void testTrue() {
-        TestObserver<Boolean> tester = new TestObserver<Boolean>();
-
         Observable<Integer> values = Observable.range(0, 4);
 
-        values.any(i -> i > 2).test();
+        final TestObserver<Boolean> tester = values.any(i -> i > 2).test();
 
         tester.assertValues(true);
         tester.assertComplete();

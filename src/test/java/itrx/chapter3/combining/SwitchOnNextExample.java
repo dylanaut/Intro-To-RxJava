@@ -40,17 +40,15 @@ public class SwitchOnNextExample {
 
     @Test
     public void test() {
-        TestObserver<Object> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.switchOnNext(
+        final TestObserver<Long> tester = Observable.switchOnNext(
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
                           .map(i ->
                                   Observable.interval(30, TimeUnit.MILLISECONDS, scheduler)
                                             .map(i2 -> i)
                           )
-        )
-                  .distinctUntilChanged().test();
+        ).distinctUntilChanged().test();
 
         scheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS);
         tester.assertValues(0L, 1L, 2L, 3L);

@@ -58,11 +58,9 @@ public class ScanExample {
 
     @Test
     public void testRunningSum() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 5);
 
-        values.scan((i1, i2) -> i1 + i2).test();
+        final TestObserver<Integer> tester = values.scan((i1, i2) -> i1 + i2).test();
 
         tester.assertValues(0);
         tester.assertComplete();

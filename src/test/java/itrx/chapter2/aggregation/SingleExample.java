@@ -65,12 +65,11 @@ public class SingleExample {
 
     @Test
     public void testSingleOrDefault() {
-        TestObserver<Integer> tester = TestObserver.create();
         Observable<Long> values = Observable.just(0L);
 
-        values.first(-1L).test();
+        final TestObserver<Long> tester = values.first(-1L).test();
 
-        tester.assertValues(1);
+        tester.assertValues(1L);
         tester.assertComplete();
         tester.assertNoErrors();
     }

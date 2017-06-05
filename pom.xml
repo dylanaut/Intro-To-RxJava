@@ -27,6 +27,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <skipTests>false</skipTests>
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
     </properties>
 
 
@@ -63,4 +64,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+
+                <configuration>
+                    <includes>
+                        <include>**/*Example.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

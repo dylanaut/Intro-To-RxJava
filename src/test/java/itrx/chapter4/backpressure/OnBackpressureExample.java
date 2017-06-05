@@ -19,19 +19,19 @@ public class OnBackpressureExample {
 
     public void exampleOnBackpressureBuffer() {
         Flowable.interval(1, TimeUnit.MILLISECONDS)
-                  .onBackpressureBuffer(1000)
-                  .observeOn(Schedulers.newThread())
-                  .subscribe(
-                          i -> {
-                              System.out.println(i);
-                              try {
-                                  Thread.sleep(100);
-                              }
-                              catch (Exception e) {
-                              }
-                          },
-                          System.out::println
-                  );
+                .onBackpressureBuffer(1000)
+                .observeOn(Schedulers.newThread())
+                .subscribe(
+                        i -> {
+                            System.out.println(i);
+                            try {
+                                Thread.sleep(100);
+                            }
+                            catch (Exception e) {
+                            }
+                        },
+                        System.out::println
+                );
 
         // 0
         // 1

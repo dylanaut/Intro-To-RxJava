@@ -57,12 +57,10 @@ public class FirstExample {
 
     @Test
     public void testFirst() {
-        TestObserver<Long> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        values.firstElement().test();
+        final TestObserver<Long> tester = values.firstElement().test();
 
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
 
@@ -74,13 +72,11 @@ public class FirstExample {
 
     @Test
     public void testFirstWithPredicate() {
-        TestObserver<Long> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
-
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        values.filter(v -> v > 5)
-              .firstElement().test();
+        final TestObserver<Long> tester = values.filter(v -> v > 5)
+                                              .firstElement().test();
 
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
 
@@ -92,11 +88,9 @@ public class FirstExample {
 
     @Test
     public void testFirstOrDefault() {
-        TestObserver<Long> tester = TestObserver.create();
-
         Observable<Long> values = Observable.empty();
 
-        values.first(-1L).test();
+        final TestObserver<Long> tester = values.first(-1L).test();
 
         tester.assertValues(-1L);
         tester.assertComplete();
@@ -106,12 +100,10 @@ public class FirstExample {
 
     @Test
     public void testFirstOrDefaultWithPredicate() {
-        TestObserver<Long> tester = TestObserver.create();
-
         Observable<Long> values = Observable.empty();
 
-        values.filter(v -> v > 5)
-              .first(-1L).test();
+        final TestObserver<Long> tester = values.filter(v -> v > 5)
+                                              .first(-1L).test();
 
         tester.assertValues(-1L);
         tester.assertComplete();

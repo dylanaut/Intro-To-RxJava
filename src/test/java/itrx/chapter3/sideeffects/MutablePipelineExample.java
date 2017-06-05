@@ -22,15 +22,13 @@ public class MutablePipelineExample {
 
     @Test
     public void test() {
-        TestObserver<String> tester = TestObserver.create();
-
         Observable<Data> data = Observable.just(
                 new Data(1, "Microsoft"),
                 new Data(2, "Netflix")
         );
 
         data.subscribe(d -> d.name = "Garbage");
-        data.map(d -> d.name).test();
+        final TestObserver<String> tester = data.map(d -> d.name).test();
 
         tester.assertValues("Garbage", "Garbage");
         tester.assertComplete();

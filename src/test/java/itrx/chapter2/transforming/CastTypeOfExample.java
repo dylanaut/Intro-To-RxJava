@@ -50,11 +50,9 @@ public class CastTypeOfExample {
 
     @Test
     public void testCast() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Object> values = Observable.just(0, 1, 2, 3);
 
-        values.cast(Integer.class).test();
+        final TestObserver<Integer> tester = values.cast(Integer.class).test();
 
         tester.assertValues(3);
         tester.assertComplete();
@@ -69,11 +67,9 @@ public class CastTypeOfExample {
 
     @Test
     public void testCastFail() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Object> values = Observable.just(0, 1, 2, "3");
 
-        values.cast(Integer.class).test();
+        final TestObserver<Integer> tester = values.cast(Integer.class).test();
 
         tester.assertValues(2);
         tester.assertComplete();
@@ -83,11 +79,9 @@ public class CastTypeOfExample {
 
     @Test
     public void testTypeOf() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Object> values = Observable.just(0, 1, "2", 3);
 
-        values.ofType(Integer.class).test();
+        final TestObserver<Integer> tester = values.ofType(Integer.class).test();
 
         tester.assertValues(3);
         tester.assertComplete();

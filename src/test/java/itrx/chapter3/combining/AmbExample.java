@@ -37,13 +37,12 @@ public class AmbExample {
 
     @Test
     public void testAmb() {
-        TestObserver<String> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.ambArray(
+        final TestObserver<String> tester = Observable.ambArray(
                 Observable.timer(100, TimeUnit.MILLISECONDS, scheduler).map(i -> "First"),
                 Observable.timer(50, TimeUnit.MILLISECONDS, scheduler).map(i -> "Second"))
-                  .test();
+                                                      .test();
 
         scheduler.advanceTimeBy(100, TimeUnit.MILLISECONDS);
         tester.assertValues("Second");
@@ -54,13 +53,15 @@ public class AmbExample {
 
     @Test
     public void testAmbWith() {
-        TestObserver<String> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.timer(100, TimeUnit.MILLISECONDS, scheduler).map(i -> "First")
-                  .ambWith(Observable.timer(50, TimeUnit.MILLISECONDS, scheduler).map(i -> "Second"))
-                  .ambWith(Observable.timer(70, TimeUnit.MILLISECONDS, scheduler).map(i -> "Third"))
-                  .test();
+        final TestObserver<String> tester =
+                Observable.timer(100, TimeUnit.MILLISECONDS, scheduler).map(i -> "First")
+                          .ambWith(Observable.timer(50, TimeUnit.MILLISECONDS, scheduler)
+                                             .map(i -> "Second"))
+                          .ambWith(Observable.timer(70, TimeUnit.MILLISECONDS, scheduler)
+                                             .map(i -> "Third"))
+                          .test();
 
         scheduler.advanceTimeBy(100, TimeUnit.MILLISECONDS);
         tester.assertValues("Second");

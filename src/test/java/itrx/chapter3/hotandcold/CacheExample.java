@@ -7,7 +7,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.TestScheduler;
 import org.junit.Test;
-import org.reactivestreams.Subscription;
 
 public class CacheExample {
 
@@ -63,31 +62,33 @@ public class CacheExample {
 
     @Test
     public void testCache() throws InterruptedException {
-        TestObserver<Long> tester1 = new TestObserver<Long>();
-        TestObserver<Long> tester2 = new TestObserver<Long>();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable<Long> obs = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
-                                         .take(5)
-                                         .cache();
+        Observable<Long> obs =
+                Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
+                          .take(5)
+                          .cache();
 
-        tester1.assertValues();
-        tester2.assertValues();
+        TestObserver<Long> tester1 = TestObserver.create();
+        TestObserver<Long> tester2 = TestObserver.create();
 
         scheduler.advanceTimeBy(500, TimeUnit.MILLISECONDS);
         obs.subscribe(tester1);
-        tester1.assertValues();
-        tester2.assertValues();
+
+        tester1.assertNoValues();
+        tester2.assertNoValues();
 
         scheduler.advanceTimeBy(300, TimeUnit.MILLISECONDS);
+
         tester1.assertValues(0L, 1L, 2L);
-        tester2.assertValues();
+        tester2.assertNoValues();
 
         obs.subscribe(tester2);
         tester1.assertValues(0L, 1L, 2L);
         tester2.assertValues(0L, 1L, 2L);
 
         scheduler.advanceTimeBy(200, TimeUnit.MILLISECONDS);
+
         tester1.assertValues(0L, 1L, 2L, 3L, 4L);
         tester2.assertValues(0L, 1L, 2L, 3L, 4L);
     }
@@ -95,9 +96,8 @@ public class CacheExample {
 
     @Test
     public void testCacheUnsubscribe() throws InterruptedException {
-        TestObserver<Long> tester = new TestObserver<Long>();
         TestScheduler scheduler = new TestScheduler();
-
+        final TestObserver<Long> tester = TestObserver.create();
         Observable<Long> obs = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
                                          .take(5)
                                          .doOnEach(tester)

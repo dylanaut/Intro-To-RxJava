@@ -24,11 +24,9 @@ public class LiftExample {
 
     @Test
     public void testLift() {
-        TestObserver<String> tester = TestObserver.create();
-
-        Observable.range(0, 5)
-                  .lift(MyMap.create(i -> i + "!"))
-                  .test();
+        final TestObserver<String> tester = Observable.range(0, 5)
+                                                    .lift(MyMap.create(i -> i + "!"))
+                                                    .test();
 
         tester.assertValues("0!", "1!", "2!", "3!", "4!");
         tester.assertComplete();

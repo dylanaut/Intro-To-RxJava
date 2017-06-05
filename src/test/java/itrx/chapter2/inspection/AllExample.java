@@ -100,8 +100,6 @@ public class AllExample {
 
     @Test
     public void testAll() {
-        TestObserver<Boolean> tester = new TestObserver<Boolean>();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(0);
             o.onNext(10);
@@ -111,7 +109,7 @@ public class AllExample {
         });
 
 
-        values.all(i -> i % 2 == 0).test();
+        final TestObserver<Boolean> tester = values.all(i -> i % 2 == 0).test();
 
         tester.assertValues(true);
         tester.assertComplete();
@@ -121,20 +119,21 @@ public class AllExample {
 
     @Test
     public void testAllEarlyFalse() {
-        TestObserver<Long> testerSrc = new TestObserver<Long>();
-        TestObserver<Boolean> testerAll = new TestObserver<Boolean>();
         TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> values =
                 Observable.interval(100, TimeUnit.MILLISECONDS, scheduler)
                           .take(5);
 
+        final TestObserver<Boolean> testerAll = TestObserver.create();
+        final TestObserver<Long> testerSrc = TestObserver.create();
+
         values.all(i -> i < 3).subscribe(testerAll);
         values.subscribe(testerSrc);
 
         scheduler.advanceTimeBy(450, TimeUnit.MILLISECONDS);
 
-        testerAll.assertValues(false);
+        testerAll.assertNoValues();
         testerAll.assertComplete();
         testerAll.assertNoErrors();
         testerSrc.assertValues(0L, 1L, 2L, 3L);
@@ -149,15 +148,13 @@ public class AllExample {
 
     @Test
     public void testAllError() {
-        TestObserver<Boolean> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(0);
             o.onNext(2);
             o.onError(new Exception());
         });
 
-        values.all(i -> i % 2 == 0).test();
+        final TestObserver<Boolean> tester = values.all(i -> i % 2 == 0).test();
 
         tester.assertValues();
         tester.assertComplete();
@@ -167,15 +164,13 @@ public class AllExample {
 
     @Test
     public void testAllErrorAfterComplete() {
-        TestObserver<Boolean> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
             o.onError(new Exception());
         });
 
-        values.all(i -> i % 2 == 0).test();
+        final TestObserver<Boolean> tester = values.all(i -> i % 2 == 0).test();
 
         tester.assertValues(false);
         tester.assertComplete();

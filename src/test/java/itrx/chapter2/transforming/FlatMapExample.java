@@ -6,10 +6,9 @@ import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.TestScheduler;
 import itrx.helper.PrintObserver;
-import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlatMapExample {
 
@@ -103,11 +102,9 @@ public class FlatMapExample {
 
     @Test
     public void testFlatMap() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.just(2);
 
-        values.flatMap(i -> Observable.range(0, i)).test();
+        final TestObserver<Integer> tester = values.flatMap(i -> Observable.range(0, i)).test();
 
         tester.assertValues(1);
         tester.assertComplete();
@@ -122,11 +119,9 @@ public class FlatMapExample {
 
     @Test
     public void testFlatMapMultipleValues() {
-        TestObserver<Integer> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(1, 3);
 
-        values.flatMap(i -> Observable.range(0, i)).test();
+        final TestObserver<Integer> tester = values.flatMap(i -> Observable.range(0, i)).test();
 
         tester.assertValues(2);
         tester.assertComplete();
@@ -137,28 +132,24 @@ public class FlatMapExample {
 
     @Test
     public void testFlatMapNewType() {
-        TestObserver<Character> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.just(1);
 
-        values.flatMap(i ->
+        final TestObserver<Character> tester = values.flatMap(i ->
                 Observable.just(
                         Character.valueOf((char) (i + 64))
                 )).test();
 
         tester.assertValues('A');
-                tester.assertComplete();
+        tester.assertComplete();
         tester.assertNoErrors();
     }
 
 
     @Test
     public void testFlatMapFilter() {
-        TestObserver<Character> tester = TestObserver.create();
-
         Observable<Integer> values = Observable.range(0, 30);
 
-        values.flatMap(i -> {
+        final TestObserver<Character> tester = values.flatMap(i -> {
             if (0 < i && i <= 26) {
                 return Observable.just(Character.valueOf((char) (i + 64)));
             } else {
@@ -166,7 +157,7 @@ public class FlatMapExample {
             }
         }).test();
 
-        Assert.assertEquals(tester.getEvents().size(), 26);
+        tester.assertValueCount(26);
         tester.assertComplete();
         tester.assertNoErrors();
     }
@@ -174,20 +165,19 @@ public class FlatMapExample {
 
     @Test
     public void testFlatMapAsynchronous() {
-        TestObserver<Object> tester = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
-        Observable.just(100, 150)
-                  .flatMap(i ->
-                          Observable.interval(i, TimeUnit.MILLISECONDS, scheduler)
-                                    .map(v -> i)
-                  )
-                  .take(10)
-                  .distinctUntilChanged().test();
+        final TestObserver<Integer> tester = Observable.just(100, 150)
+                                                       .flatMap(i ->
+                                                               Observable.interval(i, TimeUnit.MILLISECONDS, scheduler)
+                                                                         .map(v -> i)
+                                                       )
+                                                       .take(10)
+                                                       .distinctUntilChanged().test();
 
         scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
 
-        assertTrue(tester.getEvents().size() > 2); // 100 and 150 succeeded each other more than once
+        assertThat(tester.valueCount()).isGreaterThan(2); // 100 and 150 succeeded each other more than once
         tester.assertNoErrors();
     }
 }

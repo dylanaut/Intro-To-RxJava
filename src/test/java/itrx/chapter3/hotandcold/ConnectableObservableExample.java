@@ -8,7 +8,6 @@ import io.reactivex.observables.ConnectableObservable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.TestScheduler;
 import org.junit.Test;
-import org.reactivestreams.Subscription;
 
 public class ConnectableObservableExample {
 
@@ -131,12 +130,14 @@ public class ConnectableObservableExample {
     @Test
     public void testConnect() throws InterruptedException {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester1 = new TestObserver<Long>();
-        TestObserver<Long> tester2 = new TestObserver<Long>();
 
         ConnectableObservable<Long> cold =
                 Observable.interval(200, TimeUnit.MILLISECONDS, scheduler)
                           .publish();
+
+        TestObserver<Long> tester1 = TestObserver.create();
+        TestObserver<Long> tester2 = TestObserver.create();
+
         Disposable connection = cold.connect();
 
         cold.subscribe(tester1);
@@ -156,14 +157,12 @@ public class ConnectableObservableExample {
     @Test
     public void testDisconnect() throws InterruptedException {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = new TestObserver<Long>();
-
         ConnectableObservable<Long> connectable =
                 Observable.interval(200, TimeUnit.MILLISECONDS, scheduler)
                           .publish();
         Disposable connection = connectable.connect();
-        connectable
-.test();
+
+        final TestObserver<Long> tester = connectable.test();
 
         scheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS);
         tester.assertValues(0L, 1L, 2L, 3L, 4L);
@@ -183,8 +182,8 @@ public class ConnectableObservableExample {
     @Test
     public void testUnsubscribe() throws InterruptedException {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester1 = new TestObserver<Long>();
-        TestObserver<Long> tester2 = new TestObserver<Long>();
+        TestObserver<Long> tester1 = TestObserver.create();
+        TestObserver<Long> tester2 = TestObserver.create();
 
         ConnectableObservable<Long> connectable =
                 Observable.interval(200, TimeUnit.MILLISECONDS, scheduler)
@@ -213,9 +212,9 @@ public class ConnectableObservableExample {
     @Test
     public void testRefcount() throws InterruptedException {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester1 = new TestObserver<Long>();
-        TestObserver<Long> tester2 = new TestObserver<Long>();
-        TestObserver<Long> tester3 = new TestObserver<Long>();
+        TestObserver<Long> tester1 = TestObserver.create();
+        TestObserver<Long> tester2 = TestObserver.create();
+        TestObserver<Long> tester3 = TestObserver.create();
 
         Observable<Long> cold =
                 Observable.interval(200, TimeUnit.MILLISECONDS, scheduler)

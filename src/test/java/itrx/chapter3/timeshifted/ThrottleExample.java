@@ -41,11 +41,9 @@ public class ThrottleExample {
     @Test
     public void testThrottleFirst() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = TestObserver.create();
-
-        Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
-                  .throttleFirst(1, TimeUnit.SECONDS, scheduler)
-                  .take(3).test();
+        final TestObserver<Long> tester = Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
+                                                  .throttleFirst(1, TimeUnit.SECONDS, scheduler)
+                                                  .take(3).test();
 
         scheduler.advanceTimeBy(3, TimeUnit.SECONDS);
         tester.assertValues(0L, 7L, 14L);
@@ -55,11 +53,9 @@ public class ThrottleExample {
     @Test
     public void testThrottleLast() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<Long> tester = TestObserver.create();
-
-        Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
-                  .throttleLast(1, TimeUnit.SECONDS, scheduler)
-                  .take(3).test();
+        final TestObserver<Long> tester = Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
+                                                  .throttleLast(1, TimeUnit.SECONDS, scheduler)
+                                                  .take(3).test();
 
         scheduler.advanceTimeBy(3, TimeUnit.SECONDS);
         tester.assertValues(5L, 12L, 18L);

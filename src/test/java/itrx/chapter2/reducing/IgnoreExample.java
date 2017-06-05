@@ -26,11 +26,9 @@ public class IgnoreExample {
 
     @Test
     public void testIgnoreElements() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.range(0, 10);
 
-        values.ignoreElements().test();
+        final TestObserver<Void> tester = values.ignoreElements().test();
 
         tester.assertValues();
         tester.assertComplete();

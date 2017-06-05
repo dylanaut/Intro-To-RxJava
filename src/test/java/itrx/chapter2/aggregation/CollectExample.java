@@ -2,7 +2,6 @@ package itrx.chapter2.aggregation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -22,13 +21,12 @@ public class CollectExample {
 
     @Test
     public void test() {
-        TestObserver<List<Integer>> tester = TestObserver.create();
         Observable<Integer> values = Observable.range(10, 5);
 
-        values.collect(
+        final TestObserver<ArrayList<Integer>> tester = values.collect(
                 (Callable<ArrayList<Integer>>) ArrayList::new, ArrayList::add).test();
 
-        tester.assertValues(Arrays.asList(10, 11, 12, 13, 14));
+        tester.assertValue(new ArrayList<>(Arrays.asList(10, 11, 12, 13, 14)));
         tester.assertComplete();
         tester.assertNoErrors();
     }

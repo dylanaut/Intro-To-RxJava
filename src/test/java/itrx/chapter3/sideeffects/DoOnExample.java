@@ -7,7 +7,6 @@ import io.reactivex.observers.TestObserver;
 import io.reactivex.subjects.ReplaySubject;
 import itrx.helper.PrintObserver;
 import org.junit.Test;
-import org.reactivestreams.Subscription;
 
 import static org.junit.Assert.assertArrayEquals;
 

@@ -56,13 +56,11 @@ public class SequenceEqualExample {
 
     @Test
     public void testSequenceEqualTrue() {
-        TestObserver<Boolean> tester = new TestObserver<>();
-
         Observable<String> strings = Observable.just("1", "2", "3");
         Observable<Integer> ints = Observable.just(1, 2, 3);
 
-        Observable.sequenceEqual(strings, ints, (s, i) -> s.equals(i.toString()))
-                  .test();
+        final TestObserver<Boolean> tester = Observable.sequenceEqual(strings, ints, (s, i) -> s.equals(i.toString()))
+                                                     .test();
 
         tester.assertValues(true);
         tester.assertComplete();
@@ -72,13 +70,11 @@ public class SequenceEqualExample {
 
     @Test
     public void testSequenceEqualFalse() {
-        TestObserver<Boolean> tester = new TestObserver<Boolean>();
-
         Observable<String> strings = Observable.just("1", "2", "3");
         Observable<Integer> ints = Observable.just(1, 2, 3);
 
-        Observable.sequenceEqual(strings, ints)
-                  .test();
+        final TestObserver<Boolean> tester = Observable.sequenceEqual(strings, ints)
+                                                     .test();
 
         tester.assertValues(false);
         tester.assertComplete();
@@ -88,16 +84,14 @@ public class SequenceEqualExample {
 
     @Test
     public void testSequenceEqualError() {
-        TestObserver<Boolean> tester = new TestObserver<>();
-
         Observable<Integer> values = Observable.create(o -> {
             o.onNext(1);
             o.onNext(2);
             o.onError(new Exception());
         });
 
-        Observable.sequenceEqual(values, values)
-                  .test();
+        final TestObserver<Boolean> tester = Observable.sequenceEqual(values, values)
+                                                     .test();
 
         tester.assertValues();
         tester.assertComplete();

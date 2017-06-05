@@ -40,12 +40,9 @@ public class ElementAtExample {
 
     @Test
     public void testElementAt() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.range(100, 10);
 
-        values.elementAt(2)
-              .test();
+        final TestObserver<Integer> tester = values.elementAt(2).test();
 
         tester.assertValues(2);
         tester.assertComplete();
@@ -55,11 +52,9 @@ public class ElementAtExample {
 
     @Test
     public void testElementAtOrDefault() {
-        TestObserver<Integer> tester = new TestObserver<Integer>();
-
         Observable<Integer> values = Observable.range(100, 10);
 
-        values.elementAt(22, 0).test();
+        final TestObserver<Integer> tester = values.elementAt(22, 0).test();
 
         tester.assertValues(0);
         tester.assertComplete();

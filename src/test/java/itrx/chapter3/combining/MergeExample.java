@@ -3,11 +3,9 @@ package itrx.chapter3.combining;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.TestScheduler;
 import org.junit.Test;
-import org.reactivestreams.Subscription;
 
 import static org.junit.Assert.assertTrue;
 
@@ -60,13 +58,11 @@ public class MergeExample {
     @Test
     public void test() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<String> tester = TestObserver.create();
-
-        Observable.merge(
+        final TestObserver<String> tester = Observable.merge(
                 Observable.interval(250, TimeUnit.MILLISECONDS, scheduler).map(i -> "First"),
                 Observable.interval(150, TimeUnit.MILLISECONDS, scheduler).map(i -> "Second"))
-                  .take(10)
-                  .distinctUntilChanged().test();
+                                                      .take(10)
+                                                      .distinctUntilChanged().test();
 
         // Each time that merge switches between the two sources,
         // distinctUntilChanged allows one more value through.
@@ -79,12 +75,10 @@ public class MergeExample {
     @Test
     public void testMergeWith() {
         TestScheduler scheduler = new TestScheduler();
-        TestObserver<String> tester = TestObserver.create();
-
-        Observable.interval(250, TimeUnit.MILLISECONDS, scheduler).map(i -> "First")
-                                            .mergeWith(Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
-                                                                   .map(i -> "Second"))
-                                            .distinctUntilChanged().test();
+        final TestObserver<String> tester = Observable.interval(250, TimeUnit.MILLISECONDS, scheduler).map(i -> "First")
+                                                      .mergeWith(Observable.interval(150, TimeUnit.MILLISECONDS, scheduler)
+                                                                           .map(i -> "Second"))
+                                                      .distinctUntilChanged().test();
 
         // Each time that merge switches between the two sources,
         // distinctUntilChanged allows one more value through.
