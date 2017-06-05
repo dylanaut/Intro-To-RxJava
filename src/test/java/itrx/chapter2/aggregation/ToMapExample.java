@@ -226,24 +226,23 @@ public class ToMapExample {
         Observable<Person> values = Observable.just(
                 will, nick, saul
         );
-
-        values.toMultimap(
-                p -> p.age, p -> p.name,
-                () -> new HashMap<Integer, Collection<String>>(),
-                (key) -> new ArrayList<String>()).test();
-
-        /*
-        YOU MUST USE THIS SOURCECODE, because generic type inference does not work otherwise!!
+   /*
+        WE MUST USE THIS EXPLICIT SOURCECODE, because generic type inference does not work otherwise!!
         values.toMultimap(
                  p -> p.age, p -> p.name,
                 () -> new HashMap<Integer, Collection<String>>(),
                 (key) -> new ArrayList<String>()).test();
       */
+        values.toMultimap(
+                p -> p.age, p -> p.name,
+                () -> new HashMap<Integer, Collection<String>>(),
+                (key) -> new ArrayList<String>()).test();
 
-        Assert.assertEquals(tester.getEvents(), asList(new HashMap<Integer, Collection<String>>() {{
+
+        tester.assertValue(new HashMap<Integer, Collection<String>>() {{
             this.put(35, asList(will.name, saul.name));
             this.put(40, singletonList(nick.name));
-        }}));
+        }});
         tester.assertComplete();
         tester.assertNoErrors();
     }

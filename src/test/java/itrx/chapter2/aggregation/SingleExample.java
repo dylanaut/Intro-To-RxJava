@@ -42,15 +42,14 @@ public class SingleExample {
 
     @Test
     public void testSingle() {
-        TestObserver<Long> tester1 = TestObserver.create();
-        TestObserver<Long> tester2 = TestObserver.create();
         TestScheduler scheduler = new TestScheduler();
 
         Observable<Long> values = Observable.interval(100, TimeUnit.MILLISECONDS, scheduler);
 
-        Single<Long> s1 = values.take(10)
-                                .single(5L); // Emits a result.subscribe(tester1);
-        Single<Long> s2 = values.single(5L); // Never emits.subscribe(tester2);
+        // Emits a result.subscribe(tester1);
+        final TestObserver<Long> tester1 = values.take(10).single(5L).test();
+        // Never emits.subscribe(tester2);
+        final TestObserver<Long> tester2 = values.single(5L).test();
 
         scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
 
@@ -69,10 +68,8 @@ public class SingleExample {
 
         final TestObserver<Long> tester = values.first(-1L).test();
 
-        tester.assertValues(1L);
+        tester.assertValues(-1L);
         tester.assertComplete();
         tester.assertNoErrors();
     }
 }
-
-

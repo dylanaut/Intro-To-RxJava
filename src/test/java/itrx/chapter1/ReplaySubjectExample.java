@@ -69,7 +69,6 @@ public class ReplaySubjectExample {
 
         s.onNext(0);
         s.onNext(1);
-
         s.onNext(2);
 
         tester.assertValues(0, 1, 0, 1, 2, 2);

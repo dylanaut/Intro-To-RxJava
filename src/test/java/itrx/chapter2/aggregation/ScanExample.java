@@ -62,7 +62,7 @@ public class ScanExample {
 
         final TestObserver<Integer> tester = values.scan((i1, i2) -> i1 + i2).test();
 
-        tester.assertValues(0);
+        tester.assertValues(0, 1, 3, 6, 10);
         tester.assertComplete();
         tester.assertNoErrors();
     }
@@ -86,10 +86,10 @@ public class ScanExample {
         values.onNext(4);
         values.onComplete();
 
-        testerSource.assertValues(4);
+        testerSource.assertValues(2, 3, 1, 4);
         testerSource.assertComplete();
         testerSource.assertNoErrors();
-        testerScan.assertValues(1);
+        testerScan.assertValues(2, 1);
         testerScan.assertComplete();
         testerScan.assertNoErrors();
     }

@@ -85,7 +85,7 @@ public class LastExample {
 
         final TestObserver<Integer> tester = values.last(-1).test();
 
-        tester.assertValues(1);
+        tester.assertValues(-1);
         tester.assertComplete();
         tester.assertNoErrors();
     }
@@ -97,7 +97,7 @@ public class LastExample {
 
         final TestObserver<Integer> tester = values.filter(v -> v < 5).last(-1).test();
 
-        tester.assertValues(1);
+        tester.assertValues(-1);
         tester.assertComplete();
         tester.assertNoErrors();
     }

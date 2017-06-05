@@ -52,9 +52,10 @@ public class ReduceExample {
         values.reduce((i1, i2) -> (i1 > i2) ? i2 : i1)
               .subscribe(testerMin);
 
-        testerSum.assertValues(0);
+        testerSum.assertValues(10);
         testerSum.assertComplete();
         testerSum.assertNoErrors();
+
         testerMin.assertValues(0);
         testerMin.assertComplete();
         testerMin.assertNoErrors();

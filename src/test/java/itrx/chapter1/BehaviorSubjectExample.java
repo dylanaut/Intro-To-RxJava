@@ -79,7 +79,7 @@ public class BehaviorSubjectExample {
 
     @Test
     public void testInitialvalue() {
-        BehaviorSubject<Integer> s = BehaviorSubject.create();
+        BehaviorSubject<Integer> s = BehaviorSubject.createDefault(0);
         final TestObserver<Integer> tester = s.test();
         s.onNext(1);
 

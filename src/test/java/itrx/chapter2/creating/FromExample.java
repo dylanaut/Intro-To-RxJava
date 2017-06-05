@@ -4,11 +4,16 @@ import java.util.Arrays;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import org.junit.Test;
 
 public class FromExample {
+    private Logger logger = LoggerFactory.getLogger(FromExample.class);
+
 
     public void exampleFromFuture() {
         FutureTask<Integer> f = new FutureTask<Integer>(() -> {
@@ -20,9 +25,9 @@ public class FromExample {
         Observable<Integer> values = Observable.fromFuture(f);
 
         values.subscribe(
-                v -> System.out.println("Received: " + v),
-                e -> System.out.println("Error: " + e),
-                () -> System.out.println("Completed")
+                v -> logger.info("Received: " + v),
+                e -> logger.info("Error: " + e),
+                () -> logger.info("Completed")
         );
 
         // Received: 21
@@ -40,9 +45,9 @@ public class FromExample {
         Observable<Integer> values = Observable.fromFuture(f, 1000, TimeUnit.MILLISECONDS);
 
         values.subscribe(
-                v -> System.out.println("Received: " + v),
-                e -> System.out.println("Error: " + e),
-                () -> System.out.println("Completed")
+                v -> logger.info("Received: " + v),
+                e -> logger.info("Error: " + e),
+                () -> logger.info("Completed")
         );
 
         // Error: java.util.concurrent.TimeoutException
@@ -53,9 +58,9 @@ public class FromExample {
         Integer[] is = {1, 2, 3};
         Observable<Integer> values = Observable.fromArray(is);
         values.subscribe(
-                v -> System.out.println("Received: " + v),
-                e -> System.out.println("Error: " + e),
-                () -> System.out.println("Completed")
+                v -> logger.info("Received: " + v),
+                e -> logger.info("Error: " + e),
+                () -> logger.info("Completed")
         );
 
         // Received: 1
@@ -69,9 +74,9 @@ public class FromExample {
         Iterable<Integer> input = Arrays.asList(1, 2, 3);
         Observable<Integer> values = Observable.fromIterable(input);
         values.subscribe(
-                v -> System.out.println("Received: " + v),
-                e -> System.out.println("Error: " + e),
-                () -> System.out.println("Completed")
+                v -> logger.info("Received: " + v),
+                e -> logger.info("Error: " + e),
+                () -> logger.info("Completed")
         );
 
         // Received: 1
